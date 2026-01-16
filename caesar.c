@@ -8,6 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <ctype.h>
+#include <string.h>
 
 int main (int argc, char * argv[]){
 	
@@ -23,7 +25,23 @@ int main (int argc, char * argv[]){
 				printf("decrypt\n");
 				break;
 			case 's':
+				unsigned int length = strlen(optarg);
+				for(unsigned int i = 0; i < length; i++){
+					if(!isdigit(optarg[i])){
+						fprintf(stderr, "Shift amount must be a number (0>= or <=95)");
+						exit(EXIT_FAILURE);
+					}
+				}
+
 				shift_amt = atoi(optarg);
+				if(shift_amt > 95 || shift_amt < 0){
+					fprintf(stderr, "Shift value exceeds 95 or is negative\n"); 
+					exit(EXIT_FAILURE);
+				}
+				break;
+			default: 
+				printf("encrypt\n");
+				shift_amt = 3;
 				break;
 		}
 	}
