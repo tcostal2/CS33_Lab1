@@ -2,7 +2,7 @@
    @Author- Torin Costales
    CS 333
    Lab 1 
-   caeser.c
+   caesar.c
  */
 
 #include <stdio.h>
@@ -19,6 +19,15 @@ int main (int argc, char * argv[]){
 		switch(opt) 
 		{
 			case 'e':
+				int c;
+				while((c = getchar()) != EOF){
+					if (c < 32 || c > 126){
+						putchar(c);
+					}
+					//int result = c % 127;
+					//printf("%d", result);
+					putchar(c);
+				}
 				printf("encrypt\n");
 				break;
 			case 'd':
