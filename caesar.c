@@ -16,18 +16,19 @@ int main (int argc, char * argv[]){
 	int opt; 
 	int shift_amt =0;
 	while((opt= getopt(argc, argv, "eds:")) != -1){
+		int c;
+		while((c = getchar()) != EOF){
+			if (c < 32 || c > 126){
+				putchar(c);
+			}
+			else{
+				int result = c % shift_amt;
+				putchar(result);
+			}
+		}
 		switch(opt) 
 		{
 			case 'e':
-				int c;
-				while((c = getchar()) != EOF){
-					if (c < 32 || c > 126){
-						putchar(c);
-					}
-					//int result = c % 127;
-					//printf("%d", result);
-					putchar(c);
-				}
 				printf("encrypt\n");
 				break;
 			case 'd':
@@ -53,7 +54,9 @@ int main (int argc, char * argv[]){
 				shift_amt = 3;
 				break;
 		}
+
 	}
+
 	printf("Shift amt:%d", shift_amt);
 
 
