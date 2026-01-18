@@ -10,29 +10,22 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
 
 int main (int argc, char * argv[]){
 	
 	int opt; 
-	int shift_amt =0;
+	int shift_amt =3;
+	int c=0;
+	bool encrypt = true; 
 	while((opt= getopt(argc, argv, "eds:")) != -1){
-		int c;
-		while((c = getchar()) != EOF){
-			if (c < 32 || c > 126){
-				putchar(c);
-			}
-			else{
-				int result = c % shift_amt;
-				putchar(result);
-			}
-		}
 		switch(opt) 
 		{
 			case 'e':
-				printf("encrypt\n");
+				encrypt = true;
 				break;
 			case 'd':
-				printf("decrypt\n");
+				encrypt = false;
 				break;
 			case 's':
 				unsigned int length = strlen(optarg);
@@ -50,14 +43,30 @@ int main (int argc, char * argv[]){
 				}
 				break;
 			default: 
-				printf("encrypt\n");
-				shift_amt = 3;
+				fprintf(stderr, "Please enter valid flags (eds)"); 
+				exit(EXIT_FAILURE);
 				break;
 		}
 
 	}
+	while((c = getchar()) != EOF){
+		if (c < 32 || c > 126){
+			putchar(c);
+		}
+		else if(encrypt){
+			int position = c - ' ';
+			int result_enc = position + shift_amt;
+			int result_fin = result_enc % 95;
+			int output_char = result_fin + ' ';
+			putchar(output_char);
+		}
+		else{
+			printf("todo dec\n");
+		}
+	}
+	
 
-	printf("Shift amt:%d", shift_amt);
+	//printf("Shift amt:%d", shift_amt);
 
 
 	return 0;
