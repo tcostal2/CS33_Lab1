@@ -18,18 +18,22 @@ int main (int argc, char * argv[]){
 	int shift_amt =3;
 	int c=0;
 	bool encrypt = true; 
+	int effective_shift = 0;
 	while((opt= getopt(argc, argv, "eds:")) != -1){
 		switch(opt) 
 		{
-			case 'e':
+			case 'e':{
 				encrypt = true;
 				break;
-			case 'd':
+				 }
+			case 'd':{
 				encrypt = false;
 				break;
-			case 's':
+				 }
+			case 's':{
 				unsigned int length = strlen(optarg);
-				for(unsigned int i = 0; i < length; i++){
+				unsigned int i = 0;
+				for(i = 0; i < length; i++){
 					if(!isdigit(optarg[i])){
 						fprintf(stderr, "Shift amount must be a number (0>= or <=95)");
 						exit(EXIT_FAILURE);
@@ -42,32 +46,34 @@ int main (int argc, char * argv[]){
 					exit(EXIT_FAILURE);
 				}
 				break;
-			default: 
+				 }
+			default:{ 
 				fprintf(stderr, "Please enter valid flags (eds)"); 
 				exit(EXIT_FAILURE);
-				break;
+				}
 		}
 
 	}
+
+	if (encrypt){
+		effective_shift = shift_amt;
+	}
+	else{
+		effective_shift = 95 - shift_amt;
+	}
+
 	while((c = getchar()) != EOF){
-		if (c < 32 || c > 126){
-			putchar(c);
-		}
-		else if(encrypt){
+		if (c >= 32 && c <= 126){
 			int position = c - ' ';
-			int result_enc = position + shift_amt;
-			int result_fin = result_enc % 95;
-			int output_char = result_fin + ' ';
+			int shifted = position + effective_shift;
+			int wrap = shifted % 95;
+			int output_char = wrap + ' ';
 			putchar(output_char);
+
 		}
 		else{
-			printf("todo dec\n");
+			putchar(c);
 		}
 	}
-	
-
-	//printf("Shift amt:%d", shift_amt);
-
-
 	return 0;
 }
