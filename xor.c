@@ -13,7 +13,8 @@
 int main(int argc, char* argv[]){
 	char * def_key = "Xerographic";
 	char * key= def_key;
-	int key_len =0;
+	size_t key_len;
+	size_t index =0;
 	int opt=0;
 	unsigned char buf[BUF_SIZE];
 	ssize_t bytes_read;
@@ -51,6 +52,10 @@ int main(int argc, char* argv[]){
 	key_len= strlen(key);
 	while((bytes_read = read(STDIN_FILENO, buf, BUF_SIZE)) >0){
 		ssize_t total_bytes =0;
+		for(int i =0; i < bytes_read; i++){
+			buf[i] = buf[i] ^ key[index % key_len]; 
+			++index;
+		}
 		while(total_bytes < bytes_read){
 			unsigned char * output = buf + total_bytes;
 			size_t remaining = (size_t)(bytes_read - total_bytes);
@@ -66,7 +71,6 @@ int main(int argc, char* argv[]){
 		perror("read");
 		exit(EXIT_FAILURE);
 	}
-	printf("%d\n", key_len);
 
 	return 0;
 

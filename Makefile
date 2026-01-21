@@ -3,14 +3,21 @@ CFLAGS = -Wall -Wextra -Wshadow -Wunreachable-code -Wredundant-decls  -Wmissing-
 -Wno-return-local-addr -Wunsafe-loop-optimizations -Wuninitialized -Werror -g3
 
 CC = gcc 
-PROG = caesar
+PROGS = caesar xor
 
-all: $(PROG) 
+all: $(PROGS) 
 
-$(PROG): $(PROG).o
-	$(CC) $(CFLAGS) -o $(PROG) $(PROG).o 
-$(PROG).o: $(PROG).c 
-	$(CC) $(CFLAGS) -c $(PROG).c
+caesar: caesar.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+xor: xor.o
+	$(CC) $(CFLAGS) -o $@ $^
+
+caeasar.o: caesar.c
+	$(CC) $(CFLAGS) -c $<
+
+xor.o: xor.c
+	$(CC) $(CFLAGS) -c $<
 
 clean:
-	rm -f *.o $(PROG) *~ \#*
+	rm -f *.o $(PROGS) *~ \#*
